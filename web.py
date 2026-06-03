@@ -1,10 +1,25 @@
 import streamlit as st
 import time
+import os
 from groq import Groq
 from dotenv import load_dotenv
-import os
+def get_all_products():
+    return [
+        {"id": 1,  "name": "皇家成犬狗粮 10kg",    "price": 299, "stock": 50, "category": "狗粮", "brand": "皇家",   "desc": "适合1岁以上成犬，均衡营养"},
+        {"id": 2,  "name": "冠能幼犬狗粮 5kg",      "price": 189, "stock": 30, "category": "狗粮", "brand": "冠能",   "desc": "适合2月龄以上幼犬，促进发育"},
+        {"id": 3,  "name": "希尔斯处方粮 4kg",      "price": 520, "stock": 15, "category": "狗粮", "brand": "希尔斯", "desc": "肾病犬专用，低磷低蛋白"},
+        {"id": 4,  "name": "皇家成猫猫粮 4kg",      "price": 219, "stock": 60, "category": "猫粮", "brand": "皇家",   "desc": "适合1岁以上成猫，维持理想体重"},
+        {"id": 5,  "name": "渴望无谷猫粮 5kg",      "price": 389, "stock": 25, "category": "猫粮", "brand": "渴望",   "desc": "无谷物配方，高蛋白低碳水"},
+        {"id": 6,  "name": "麦富迪冻干猫粮",        "price": 128, "stock": 40, "category": "猫粮", "brand": "麦富迪", "desc": "冻干工艺锁鲜，营养丰富"},
+        {"id": 7,  "name": "狗狗自动饮水机",        "price": 89,  "stock": 80, "category": "用品", "brand": "小佩",   "desc": "循环过滤，保持水质新鲜"},
+        {"id": 8,  "name": "猫咪自动喂食器",        "price": 159, "stock": 35, "category": "用品", "brand": "小佩",   "desc": "定时定量，支持手机APP控制"},
+        {"id": 9,  "name": "宠物除跳蚤滴剂",        "price": 65,  "stock": 100,"category": "医疗", "brand": "福来恩", "desc": "体外驱虫，一月一次"},
+        {"id": 10, "name": "狗狗驱虫药 体内",       "price": 45,  "stock": 90, "category": "医疗", "brand": "拜宠清", "desc": "广谱驱虫，适合3月龄以上"},
+    ]
+
 load_dotenv()
 client = Groq(api_key=os.getenv("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"))
+
 def get_ai_response(messages):
     products = get_all_products()
     product_text = ""
@@ -13,10 +28,8 @@ def get_ai_response(messages):
         product_text += f"- [{p['category']}] {p['name']}，品牌：{p['brand']}，价格：{p['price']}元，{stock_status}，简介：{p['desc']}\n"
 
     system_prompt = f"""你是一个专业的宠物店 AI 客服助手，名字叫"萌宠小助手"。
-
 当前在售商品：
 {product_text}
-
 服务准则：
 1. 用亲切友好的语气，适当使用宠物emoji
 2. 根据宠物品种、年龄、健康状况精准推荐并说明理由
@@ -44,84 +57,39 @@ st.markdown("""
 <style>
 .stApp { background-color: #212121; }
 #MainMenu, header, footer { visibility: hidden; }
-[data-testid="stSidebar"] {
-    background-color: #171717 !important;
-    border-right: 1px solid #2f2f2f;
-}
+[data-testid="stSidebar"] { background-color: #171717 !important; border-right: 1px solid #2f2f2f; }
 [data-testid="stSidebar"] * { color: #ececec !important; }
-.product-card {
-    background: #2a2a2a;
-    border: 1px solid #333;
-    border-radius: 10px;
-    padding: 10px 12px;
-    margin-bottom: 6px;
-    transition: border-color 0.2s;
-}
+.product-card { background: #2a2a2a; border: 1px solid #333; border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; }
 .product-card:hover { border-color: #10a37f; }
 .p-name { font-size: 13px; font-weight: 600; color: #ececec; }
 .p-price { font-size: 13px; color: #10a37f; font-weight: 700; margin-top: 2px; }
-.p-desc { font-size: 11px; color: #8e8ea0; margin-top: 3px; line-height: 1.4; }
+.p-desc { font-size: 11px; color: #8e8ea0; margin-top: 3px; }
 .tag-ok   { background:#0d3d2e; color:#10a37f; border-radius:4px; padding:1px 6px; font-size:11px; }
 .tag-warn { background:#3d2e0d; color:#f5a623; border-radius:4px; padding:1px 6px; font-size:11px; }
 .tag-out  { background:#3d0d0d; color:#ef4444; border-radius:4px; padding:1px 6px; font-size:11px; }
-.stButton button {
-    background: transparent !important;
-    border: 1px solid #3a3a3a !important;
-    color: #8e8ea0 !important;
-    border-radius: 8px !important;
-    font-size: 13px !important;
-    width: 100% !important;
-}
+.stButton button { background: transparent !important; border: 1px solid #3a3a3a !important; color: #8e8ea0 !important; border-radius: 8px !important; width: 100% !important; }
 .stButton button:hover { border-color: #ef4444 !important; color: #ef4444 !important; }
-[data-testid="stChatMessage"] {
-    background: transparent !important;
-    border: none !important;
-    padding: 12px 0 !important;
-    max-width: 760px;
-    margin: 0 auto;
-}
-[data-testid="stChatInput"] textarea {
-    background: #2f2f2f !important;
-    border: 1px solid #444 !important;
-    border-radius: 14px !important;
-    color: #ececec !important;
-    font-size: 15px !important;
-}
-[data-testid="stChatInput"] textarea:focus {
-    border-color: #10a37f !important;
-    box-shadow: 0 0 0 2px rgba(16,163,127,0.15) !important;
-}
-.welcome-card {
-    background: linear-gradient(135deg, #1a2e25, #1e2a3a);
-    border: 1px solid #2a4a3a;
-    border-radius: 16px;
-    padding: 24px;
-    max-width: 760px;
-    margin: 40px auto 20px;
-    text-align: center;
-}
+[data-testid="stChatMessage"] { background: transparent !important; border: none !important; padding: 12px 0 !important; max-width: 760px; margin: 0 auto; }
+[data-testid="stChatInput"] textarea { background: #2f2f2f !important; border: 1px solid #444 !important; border-radius: 14px !important; color: #ececec !important; font-size: 15px !important; }
+[data-testid="stChatInput"] textarea:focus { border-color: #10a37f !important; }
+.welcome-card { background: linear-gradient(135deg, #1a2e25, #1e2a3a); border: 1px solid #2a4a3a; border-radius: 16px; padding: 24px; max-width: 760px; margin: 40px auto 20px; text-align: center; }
 .welcome-icon { font-size: 48px; margin-bottom: 12px; }
 .welcome-title { font-size: 20px; font-weight: 700; color: #ececec; margin-bottom: 8px; }
 .welcome-desc { font-size: 14px; color: #8e8ea0; line-height: 1.6; }
 </style>
 """, unsafe_allow_html=True)
 
-# 侧边栏
 with st.sidebar:
     st.markdown("## 🐾 萌宠小助手")
     st.markdown("<small style='color:#8e8ea0'>专业宠物 AI 客服</small>", unsafe_allow_html=True)
     st.markdown("---")
-
-    st.markdown("**📦 商品分类**")
     categories = ["全部", "🐕 狗粮", "🐈 猫粮", "🛍️ 用品", "💊 医疗"]
     cat_map = {"全部": "全部", "🐕 狗粮": "狗粮", "🐈 猫粮": "猫粮", "🛍️ 用品": "用品", "💊 医疗": "医疗"}
     selected = st.radio("", categories, label_visibility="collapsed")
     selected_cat = cat_map[selected]
-
     st.markdown("---")
     products = get_all_products()
     filtered = products if selected_cat == "全部" else [p for p in products if p["category"] == selected_cat]
-
     for p in filtered:
         if p["stock"] > 10:
             tag = '<span class="tag-ok">有货</span>'
@@ -129,21 +97,12 @@ with st.sidebar:
             tag = '<span class="tag-warn">紧张</span>'
         else:
             tag = '<span class="tag-out">售罄</span>'
-
-        st.markdown(f"""
-        <div class="product-card">
-            <div class="p-name">{p['name']}</div>
-            <div class="p-price">¥{p['price']} &nbsp; {tag}</div>
-            <div class="p-desc">{p['desc']}</div>
-        </div>
-        """, unsafe_allow_html=True)
-
+        st.markdown(f'<div class="product-card"><div class="p-name">{p["name"]}</div><div class="p-price">¥{p["price"]} &nbsp; {tag}</div><div class="p-desc">{p["desc"]}</div></div>', unsafe_allow_html=True)
     st.markdown("---")
     if st.button("🗑️ 清空对话记录", use_container_width=True):
         st.session_state.messages = []
         st.rerun()
 
-# 主聊天区
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -152,12 +111,9 @@ if not st.session_state.messages:
     <div class="welcome-card">
         <div class="welcome-icon">🐾</div>
         <div class="welcome-title">你好，我是萌宠小助手</div>
-        <div class="welcome-desc">
-            告诉我你家宠物的品种和年龄<br>我来帮你找到最合适的商品和解答任何问题
-        </div>
+        <div class="welcome-desc">告诉我你家宠物的品种和年龄<br>我来帮你找到最合适的商品和解答任何问题</div>
     </div>
     """, unsafe_allow_html=True)
-
     col1, col2, col3 = st.columns(3)
     with col1:
         if st.button("🐕 推荐成犬狗粮", use_container_width=True):
