@@ -4,7 +4,8 @@ from groq import Groq
 from dotenv import load_dotenv
 import os
 load_dotenv()
-client = Groq(api_key=os.getenv("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"))def get_ai_response(messages):
+client = Groq(api_key=os.getenv("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"))
+def get_ai_response(messages):
     products = get_all_products()
     product_text = ""
     for p in products:
